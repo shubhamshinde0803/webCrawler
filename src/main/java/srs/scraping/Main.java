@@ -2,29 +2,16 @@ package srs.scraping;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
-        String url = "https://www.fantasybookreview.co.uk/top-100-fantasy-books/";
+        String url = "https://www.bestsellerbookreviews.com/blog/the-25-best-book-reviewing-websites";
         try{
             Document document = Jsoup.connect(url).get();
-            Elements bookElements = document.select("h2");
-            int count = 10;
-            for(Element book : bookElements){
-                Element link = book.selectFirst("a");
-                if(link != null){
-                    count--;
-                    String title = link.text();
-                    System.out.println("title: " + title);
-                    if(count == 0)
-                        break;
-                }
-
-            }
+            Thread pThread = new Thread(new ProcessingThread(document));
+            pThread.start();
         }catch (IOException e){
             e.printStackTrace();
         }
